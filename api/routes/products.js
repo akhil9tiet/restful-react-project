@@ -8,7 +8,7 @@ router.get('/', (req, res, next) => {
 }); //handles incoming get request
 
 router.post('/', (req, res, next) => {
-	res.status(200).json({
+	res.status(201).json({
 		message: 'handling POST requests to /products'
 	});
 }); //handles incoming get request
