@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 
 const Order = require('../models/order');
+const Product = require('../models/product');
 
 router.get('/', (req, res, next) => {
 	Order.find()
@@ -30,13 +31,20 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-	const order = new Order({
-		_id: mongoose.Types.ObjectId(),
-		quantity: req.body.quantity,
-		product: req.body.productId
-	});
-	order
-		.save()
+	Product.findById(req.body.productId)
+		.then((product) => {
+			if (!product) {
+				return res.status(404).json({
+					message: 'Product not found'
+				});
+			}
+			const order = new Order({
+				_id: mongoose.Types.ObjectId(),
+				quantity: req.body.quantity,
+				product: req.body.productId
+			});
+			order.save();
+		})
 		.then((result) => {
 			console.log(result);
 			res.status(201).json({
@@ -54,7 +62,10 @@ router.post('/', (req, res, next) => {
 		})
 		.catch((err) => {
 			console.log(err);
-			res.status(500).json({ error: err });
+			res.status(500).json({
+				message: 'Product not found',
+				error: err
+			});
 		});
 });
 
