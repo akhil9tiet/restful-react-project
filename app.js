@@ -8,8 +8,20 @@ const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
 
 app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({extended: false})); //extended true will help parse extended bodies which rich data in it
+app.use(bodyParser.urlencoded({ extended: false })); //extended true will help parse extended bodies which rich data in it
 app.use(bodyParser.json()); //extract json data and make it easy for us to read
+
+//prevent CORS errors when we connect single page application or some other client to our API
+app.use((req, res, next) => {
+	res.header('Access-Control-Allow-Origin', '*'); //response header we add header and the first header allows which will cancel the cors error which said no access control allowed at origin, * gives access to any origin
+	res.header('Access-Control-Allow-Header', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+	if (req.method === 'OPTIONS') {
+		//Browser will always send an OIPTIONS request first when you send a POST request or a PUT request
+		res.header('Access-Control-Allow-Methods', 'PUST, POST, PATCH, DELETE, GET'); // we tell the browser what it might send...basically all the HTTP verbs we want to support with our API
+		return res.status(200).json({});
+	}
+	next();
+});
 
 //Routes which should handle routes
 app.use('/products', productRoutes); //sets up a middleware so incoming request has to go through app.use and things we pass through it
