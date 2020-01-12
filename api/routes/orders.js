@@ -88,10 +88,25 @@ router.get('/:orderId', (req, res, next) => {
 });
 
 router.delete('/:orderId', (req, res, next) => {
-	res.status(200).json({
-		message: 'Orders deleted',
-		orderId: req.params.orderId
-	});
+	Order.remove({ _id: req.params.orderId })
+		.exec()
+		.then((result) => {
+			res.status(200).json({
+				message: `Order Deleted`,
+				request: {
+					message: 'You can create a new order by',
+					type: 'POST',
+					url: 'http://localhost:3000/orders',
+					body: { productId: 'ID', quantity: 'Number' }
+				}
+			});
+		})
+		.catch((err) => {
+			res.status(500).json({
+				message: 'Could not delete',
+				error: err
+			});
+		});
 });
 
 module.exports = router;
