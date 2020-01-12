@@ -8,12 +8,15 @@ const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
 
 mongoose.connect(
-	`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-dssse.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`
+	`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-dssse.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`,
+	{ useUnifiedTopology: true, useNewUrlParser: true }
 	// ,
 	// {
 	// 	useMongoClient:true
 	// }
 );
+
+mongoose.Promise = global.Promise; //use default nodejs promise implementation instead of the monngose one
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false })); //extended true will help parse extended bodies which rich data in it
