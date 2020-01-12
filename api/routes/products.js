@@ -17,11 +17,18 @@ router.post('/', (req, res, next) => {
 		price: req.body.price
 	});
 	product
-		.save()
+		.save() //save is a function provided by mongoose which will store the object in the database
 		.then((result) => {
 			console.log(result);
+			res.status(201).json({
+				message: 'handling POST requests to /products',
+				createdProduct: result
+			});
 		})
-		.catch((err) => console.log(err)); //save is a function provided by mongoose which will store the object in the database
+		.catch((err) => {
+			console.log(err);
+			res.status(500).json({ error: err });
+		});
 
 	res.status(201).json({
 		message: 'handling POST requests to /products',
@@ -35,7 +42,12 @@ router.get('/:productId', (req, res, next) => {
 		.exec()
 		.then((doc) => {
 			console.log(doc);
-			res.status(200).json(doc);
+
+			if (doc) {
+				res.status(200).json(doc);
+			} else {
+				res.status(404).json({ message: 'No valid entry found for the provided ID' });
+			}
 		})
 		.catch((err) => {
 			console.log(err);
