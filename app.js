@@ -6,10 +6,11 @@ const mongoose = require('mongoose');
 
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
+const userRoutes = require('./api/routes/user');
 
 mongoose.connect(
 	`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-dssse.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`,
-	{ useUnifiedTopology: true, useNewUrlParser: true }
+	{ useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true }
 	// ,
 	// {
 	// 	useMongoClient:true
@@ -19,7 +20,7 @@ mongoose.connect(
 mongoose.Promise = global.Promise; //use default nodejs promise implementation instead of the monngose one
 
 app.use(morgan('dev'));
-app.use('/uploads',express.static('uploads')); //this is to make the uploads folder available statically
+app.use('/uploads', express.static('uploads')); //this is to make the uploads folder available statically
 app.use(bodyParser.urlencoded({ extended: false })); //extended true will help parse extended bodies which rich data in it
 app.use(bodyParser.json()); //extract json data and make it easy for us to read
 
@@ -38,6 +39,7 @@ app.use((req, res, next) => {
 //Routes which should handle routes
 app.use('/products', productRoutes); //sets up a middleware so incoming request has to go through app.use and things we pass through it
 app.use('/orders', orderRoutes);
+app.use('/user', userRoutes);
 
 //if you reach here it means that any of the above two routes was able to handle the request
 app.use((req, res, next) => {
