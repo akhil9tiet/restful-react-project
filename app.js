@@ -19,6 +19,7 @@ mongoose.connect(
 mongoose.Promise = global.Promise; //use default nodejs promise implementation instead of the monngose one
 
 app.use(morgan('dev'));
+app.use('/uploads',express.static('uploads')); //this is to make the uploads folder available statically
 app.use(bodyParser.urlencoded({ extended: false })); //extended true will help parse extended bodies which rich data in it
 app.use(bodyParser.json()); //extract json data and make it easy for us to read
 
