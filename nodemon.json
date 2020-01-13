@@ -2,6 +2,7 @@
 	"env": {
 		"MONGO_USER": "akhgupta",
 		"MONGO_PASSWORD": "KP5kr8LBVifXuV8W",
-		"MONGO_DB": "node-shop-react"
+    "MONGO_DB": "node-shop-react",
+    "JWT_KEY": "secret"
 	}
 }
